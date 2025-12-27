@@ -1,7 +1,8 @@
 // src/app/page.tsx
 import React from 'react';
 import HeroSection from '@/components/features/HeroSection';
-import BigRosie from '@/components/features/BigRosie'; // Import the new component here
+import BigRosie from '@/components/features/BigRosie';
+import ProductSlider from '@/components/features/ProductSlider';
 import InstagramFeed from '@/components/features/InstagramFeed';
 
 export default function Home() {
@@ -14,7 +15,10 @@ export default function Home() {
       {/* 2. The "Big Rosie" Roaster Section */}
       <BigRosie />
 
-      {/* 3. The Instagram Feed */}
+      {/* 3. The Product Slider Section */}
+      <ProductSlider />
+
+      {/* 4. The Instagram Feed */}
       <InstagramFeed />
 
     </main>
