@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar"; // Imports the Navbar component
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Humble Coffee | Durban",
@@ -22,7 +23,7 @@ export default function RootLayout({
         
         {/* This is where page.tsx content gets injected */}
         {children}
-        
+        <Footer />
       </body>
     </html>
   );
