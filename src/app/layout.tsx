@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar"; // <--- 1. Add this import
+import Navbar from "@/components/layout/Navbar"; // Imports the Navbar component
 
 export const metadata: Metadata = {
   title: "Humble Coffee | Durban",
@@ -14,9 +14,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* We add the background color here to ensure no white flashes during loading */}
       <body className="antialiased bg-[#F9F7F2]">
-        <Navbar /> {/* <--- 2. Add this tag here */}
+        
+        {/* The Navbar sits at the top of the body, outside the page content */}
+        <Navbar />
+        
+        {/* This is where page.tsx content gets injected */}
         {children}
+        
       </body>
     </html>
   );

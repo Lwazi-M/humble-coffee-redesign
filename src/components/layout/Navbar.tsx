@@ -58,23 +58,39 @@ const Navbar = () => {
 
           {/* 3. Icons & CTA */}
           <div className="hidden md:flex items-center gap-6">
-            <button className="text-[#02303A] hover:text-[#E09F3E] transition-colors">
+            <button
+              type="button"
+              aria-label="Search"
+              title="Search"
+              className="text-[#02303A] hover:text-[#E09F3E] transition-colors"
+            >
               <Search size={20} />
             </button>
             
-            <button className="relative text-[#02303A] hover:text-[#E09F3E] transition-colors">
+            <button
+              type="button"
+              aria-label="Open cart"
+              title="Open cart"
+              className="relative text-[#02303A] hover:text-[#E09F3E] transition-colors"
+            >
               <ShoppingBag size={20} />
               {/* Cart Badge */}
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
             </button>
 
-            <button className="px-5 py-2.5 bg-[#02303A] text-[#F9F7F2] rounded-full text-sm font-semibold hover:bg-[#02303A]/90 transition-all">
+            <button
+              type="button"
+              className="px-5 py-2.5 bg-[#02303A] text-[#F9F7F2] rounded-full text-sm font-semibold hover:bg-[#02303A]/90 transition-all"
+            >
               Book a Table
             </button>
           </div>
 
           {/* 4. Mobile Menu Button (Hamburger) */}
-          <button 
+          <button
+            type="button"
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            title={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             className="md:hidden text-[#02303A] z-50"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
