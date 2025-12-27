@@ -1,0 +1,29 @@
+name: Build Check 🏗️
+
+# When does the robot wake up?
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "feature/*" ]
+
+# What does the robot do?
+jobs:
+  build:
+    runs-on: ubuntu-latest # The robot uses a Linux machine
+
+    steps:
+    - name: Check out code 🛎️
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js 🟢
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install Dependencies 📦
+      run: npm ci
+
+    - name: Try to Build 🛠️
+      run: npm run build
