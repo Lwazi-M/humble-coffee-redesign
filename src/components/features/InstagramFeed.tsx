@@ -24,6 +24,7 @@ const InstagramFeed = () => {
         <a 
           href="https://instagram.com" 
           target="_blank"
+          rel="noopener noreferrer"
           className="hidden md:flex items-center gap-2 px-6 py-3 border border-[#02303A] rounded-full hover:bg-[#02303A] hover:text-white transition-all duration-300"
         >
           <Instagram size={20} />
@@ -41,6 +42,7 @@ const InstagramFeed = () => {
               key={post.id}
               href={post.link}
               target="_blank"
+              rel="noopener noreferrer"
               className="group relative block aspect-square overflow-hidden rounded-2xl cursor-pointer"
               
               // Animation: Fade in slightly as they appear
