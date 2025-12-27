@@ -4,6 +4,7 @@ import HeroSection from '@/components/features/HeroSection';
 import BigRosie from '@/components/features/BigRosie';
 import ProductSlider from '@/components/features/ProductSlider';
 import InstagramFeed from '@/components/features/InstagramFeed';
+import ContactSection from '@/components/features/ContactSection';
 
 export default function Home() {
   return (
@@ -20,6 +21,9 @@ export default function Home() {
 
       {/* 4. The Instagram Feed */}
       <InstagramFeed />
+
+      {/* 5. The Contact Section */}
+      <ContactSection />
 
     </main>
   );
