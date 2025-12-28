@@ -1,3 +1,4 @@
+// src/components/features/ContactSection.tsx
 "use client";
 
 import React from 'react';
@@ -22,6 +23,7 @@ const ContactSection = () => {
           
           <div className="grid md:grid-cols-3 gap-8 mt-12">
             
+            {/* Hours */}
             <div className="p-6 border border-white/10 rounded-2xl hover:bg-white/5 transition-colors">
               <Clock className="w-8 h-8 mx-auto mb-4 text-[#E09F3E]" />
               <h3 className="font-bold text-lg mb-2">Opening Hours</h3>
@@ -29,6 +31,7 @@ const ContactSection = () => {
               <p className="opacity-80">Sat: 07:00 - 13:00</p>
             </div>
 
+            {/* Phone */}
             <div className="p-6 border border-white/10 rounded-2xl hover:bg-white/5 transition-colors">
               <Phone className="w-8 h-8 mx-auto mb-4 text-[#E09F3E]" />
               <h3 className="font-bold text-lg mb-2">Call Us</h3>
@@ -36,6 +39,7 @@ const ContactSection = () => {
               <p className="text-sm opacity-60 mt-2">Bookings available</p>
             </div>
 
+            {/* Email */}
             <div className="p-6 border border-white/10 rounded-2xl hover:bg-white/5 transition-colors">
               <Mail className="w-8 h-8 mx-auto mb-4 text-[#E09F3E]" />
               <h3 className="font-bold text-lg mb-2">Email</h3>
