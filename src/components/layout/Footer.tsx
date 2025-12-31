@@ -3,6 +3,8 @@
 
 import React from 'react';
 import { Instagram, Facebook, Mail, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const Footer = () => {
   return (
@@ -13,7 +15,19 @@ const Footer = () => {
           
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-3xl font-serif font-bold">HUMBLE.</h3>
+            {/* Logo - With 'brightness-0 invert' filter to make it white */}
+            <Link href="/" className="relative z-50 block">
+                <div className="relative w-40 h-16"> 
+                    <Image 
+                        src="/assets/secondary_logo.webp" 
+                        alt="Humble Coffee"
+                        fill
+                        className="object-contain object-left brightness-0 invert" 
+                        priority
+                    />
+                </div>
+            </Link>
+          
             <p className="opacity-80 max-w-xs">
               Ethically sourced, locally roasted, and served with love in Durban.
             </p>
@@ -43,8 +57,9 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="font-bold text-[#E09F3E]">Visit Us</h4>
             <div className="opacity-80 space-y-2">
-              <p className="flex items-center gap-2"><MapPin size={18} /> 21 Florida Rd, Durban</p>
-              <p className="flex items-center gap-2"><Mail size={18} /> hello@humblecoffee.co.za</p>
+              <p className="flex items-center gap-2"><MapPin size={18} /> 222 Lilian Ngoyi Rd, Durban</p>
+              <p className="flex items-center gap-2"><MapPin size={18} /> 262 Florida Rd, Durban</p>
+              <p className="flex items-center gap-2"><Mail size={18} /> amy@humblecoffee.co.za</p>
             </div>
             <div className="flex gap-4 pt-2">
               <Instagram className="cursor-pointer hover:text-[#E09F3E]" />
