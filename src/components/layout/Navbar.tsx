@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Menu, X, Search } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image'; // <--- Imported Image component
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -34,11 +35,17 @@ const Navbar = () => {
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
           
-          {/* 1. Logo */}
+          {/* 1. Logo - Updated to use real Image asset */}
           <Link href="/" className="relative z-50">
-            <span className="font-serif text-2xl font-bold text-[#02303A] tracking-tighter">
-              HUMBLE<span className="text-[#E09F3E]">.</span>
-            </span>
+            <div className="relative w-40 h-16"> 
+                <Image 
+                    src="/assets/logo.webp" 
+                    alt="Humble Coffee"
+                    fill
+                    className="object-contain object-left"
+                    priority
+                />
+            </div>
           </Link>
 
           {/* 2. Desktop Links (Hidden on Mobile) */}

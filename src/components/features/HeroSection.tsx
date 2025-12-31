@@ -24,7 +24,7 @@ const HeroSection = () => {
           >
             {/* The "Handwritten" Badge */}
             <span className="inline-block py-1 px-3 border border-[#02303A] rounded-full text-sm font-semibold tracking-wide mb-4 text-[#02303A]">
-              📍 EST. 2019 • DURBAN
+              📍 EST. 2017 • DURBAN
             </span>
 
             <h1 className="text-5xl md:text-7xl font-serif text-[#02303A] leading-tight">
@@ -40,8 +40,8 @@ const HeroSection = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
           >
-            Ethically sourced, locally roasted, and served without a drop of pretence. 
-            Experience Durban’s favourite woman-led roastery.
+            Our goal is for every guest to feel not only welcomed, but truly at home. 
+            Humble Coffee represents our commitment to exceptional coffee, served with humility and without pretence.
           </motion.p>
 
           {/* Buttons Area */}

@@ -13,30 +13,30 @@ export interface InstagramPost {
 export const instaFeed: InstagramPost[] = [
   {
     id: 1,
-    img: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=600&auto=format&fit=crop", // Coffee Cup
-    likes: 124,
-    caption: "Morning brew ☕ #humblecoffee",
-    link: "https://instagram.com",
+    img: "/assets/humble-coffee.jpg", // Coffee Cup
+    likes: 890,
+    caption: "📍Humble Coffee",
+    link: "https://www.instagram.com/p/DMo_-G3ofTU/?hl=en&img_index=1",
   },
   {
     id: 2,
-    img: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=600&auto=format&fit=crop", // Payment Terminal/Shop
-    likes: 85,
-    caption: "Open for business! Come say hi.",
-    link: "https://instagram.com",
+    img: "/assets/food.jpg", // Payment Terminal/Shop
+    likes: 135,
+    caption: "L U N C H 🥙",
+    link: "https://www.instagram.com/p/DQTrIiYjd0a/?hl=en&img_index=1",
   },
   {
     id: 3,
-    img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=600&auto=format&fit=crop", // Latte Art
-    likes: 201,
-    caption: "Practice makes progress. 🌿",
-    link: "https://instagram.com",
+    img: "/assets/latte.jpg", // Latte Art
+    likes: 116,
+    caption: "Making Wednesdays better since 2019. ❤️",
+    link: "https://www.instagram.com/p/C70d_meKxdA/?hl=en",
   },
   {
     id: 4,
-    img: "https://images.unsplash.com/photo-1507133750069-bef72f3a2b5d?q=80&w=600&auto=format&fit=crop", // Coffee Beans
-    likes: 156,
-    caption: "Fresh roast just dropped. 🔥",
-    link: "https://instagram.com",
+    img: "/assets/merch.jpg",
+    likes: 101,
+    caption: "Available at both cafe's.🔥",
+    link: "https://www.instagram.com/p/DCWreQFqsDV/?hl=en",
   },
 ];

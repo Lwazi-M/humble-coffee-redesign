@@ -17,12 +17,12 @@ const InstagramFeed = () => {
           <h2 className="text-4xl md:text-5xl font-serif text-[#02303A] mb-2">
             Caught on Camera
           </h2>
-          <p className="text-[#02303A]/70">Follow the aroma @humblecoffee</p>
+          <p className="text-[#02303A]/70">Follow the aroma @humblecoffeeza</p>
         </div>
         
         {/* Simple button with hover effect */}
         <a 
-          href="https://instagram.com" 
+          href="https://www.instagram.com/humblecoffeeza/?hl=en" 
           target="_blank"
           rel="noopener noreferrer"
           className="hidden md:flex items-center gap-2 px-6 py-3 border border-[#02303A] rounded-full hover:bg-[#02303A] hover:text-white transition-all duration-300"
