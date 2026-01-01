@@ -21,6 +21,13 @@ const Navbar = () => {
 
   const navItems = ['Our Menu', 'Shop', 'Our Story', 'Locations', 'Contact Us'];
 
+  // Helper function to handle routing
+  const getLinkPath = (name: string) => {
+    if (name === 'Contact Us') return '/contact';
+    if (name === 'Our Story') return '/our-story';
+    return '#'; // Default for items we haven't built yet
+  };
+
   return (
     <>
       {/* --- DESKTOP NAVBAR --- */}
@@ -54,8 +61,7 @@ const Navbar = () => {
             {navItems.map((item) => (
               <Link 
                 key={item} 
-                // UPDATE: Logic to link 'Contact Us' to the new page
-                href={item === 'Contact Us' ? '/contact' : '#'} 
+                href={getLinkPath(item)} 
                 className="hover:text-[#E09F3E] transition-colors relative group"
               >
                 {item}
@@ -115,7 +121,7 @@ const Navbar = () => {
             {[...navItems, 'Book a Table'].map((item) => (
               <Link 
                 key={item} 
-                href={item === 'Contact Us' ? '/contact' : '#'}
+                href={getLinkPath(item)}
                 className="text-3xl font-serif text-[#02303A]"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
