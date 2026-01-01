@@ -15,18 +15,16 @@ const Footer = () => {
           
           {/* Brand */}
           <div className="space-y-4">
-            {/* Logo - With 'brightness-0 invert' filter to make it white */}
-            <Link href="/" className="relative z-50 block">
-                <div className="relative w-40 h-16"> 
-                    <Image 
-                        src="/assets/secondary_logo.webp" 
-                        alt="Humble Coffee"
-                        fill
-                        className="object-contain object-left brightness-0 invert" 
-                        priority
-                    />
-                </div>
-            </Link>
+            {/* Logo - Static Image (No Link), White Filter */}
+            <div className="relative w-40 h-16"> 
+                <Image 
+                    src="/assets/secondary_logo.webp" 
+                    alt="Humble Coffee"
+                    fill
+                    className="object-contain object-left brightness-0 invert" 
+                    priority
+                />
+            </div>
           
             <p className="opacity-80 max-w-xs">
               Ethically sourced, locally roasted, and served with love in Durban.
@@ -38,22 +36,21 @@ const Footer = () => {
             <div className="space-y-4">
               <h4 className="font-bold text-[#E09F3E]">Shop</h4>
               <ul className="space-y-2 opacity-80">
-                <li><a href="#" className="hover:text-white">Coffee Beans</a></li>
-                <li><a href="#" className="hover:text-white">Merch</a></li>
-                <li><a href="#" className="hover:text-white">Subscriptions</a></li>
+                <li><Link href="#" className="hover:text-white transition-colors">Coffee Beans</Link></li>
+                <li><Link href="#" className="hover:text-white transition-colors">Merch</Link></li>
               </ul>
             </div>
             <div className="space-y-4">
               <h4 className="font-bold text-[#E09F3E]">Company</h4>
               <ul className="space-y-2 opacity-80">
-                <li><a href="#" className="hover:text-white">Our Story</a></li>
-                <li><a href="#" className="hover:text-white">Locations</a></li>
-                <li><a href="#" className="hover:text-white">Contact</a></li>
+                <li><Link href="/our-story" className="hover:text-white transition-colors">Our Story</Link></li>
+                <li><Link href="#" className="hover:text-white transition-colors">Locations</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
               </ul>
             </div>
           </div>
 
-          {/* Contact */}
+          {/* Contact & Socials */}
           <div className="space-y-4">
             <h4 className="font-bold text-[#E09F3E]">Visit Us</h4>
             <div className="opacity-80 space-y-2">
@@ -61,10 +58,28 @@ const Footer = () => {
               <p className="flex items-center gap-2"><MapPin size={18} /> 262 Florida Rd, Durban</p>
               <p className="flex items-center gap-2"><Mail size={18} /> amy@humblecoffee.co.za</p>
             </div>
+            
+            {/* UPDATED: Social Media Links */}
             <div className="flex gap-4 pt-2">
-              <Instagram className="cursor-pointer hover:text-[#E09F3E]" />
-              <Facebook className="cursor-pointer hover:text-[#E09F3E]" />
+              <a 
+                href="https://www.instagram.com/humblecoffeeza/"
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+              >
+                <Instagram className="cursor-pointer hover:text-[#E09F3E] transition-colors" />
+              </a>
+              
+              <a 
+                href="https://www.facebook.com/humblecoffeeza/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+              >
+                <Facebook className="cursor-pointer hover:text-[#E09F3E] transition-colors" />
+              </a>
             </div>
+
           </div>
 
         </div>
