@@ -5,13 +5,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Menu, X, Search } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image'; // <--- Imported Image component
+import Image from 'next/image';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Magic Effect: Detect scroll to change background from transparent to solid
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -20,14 +19,16 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navItems = ['Our Menu', 'Shop', 'Our Story', 'Locations', 'Contact Us'];
+
   return (
     <>
       {/* --- DESKTOP NAVBAR --- */}
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled 
-            ? 'bg-[#F9F7F2]/90 backdrop-blur-md py-4 shadow-sm' // Scrolled state (Glass)
-            : 'bg-transparent py-6' // Top state (Transparent)
+            ? 'bg-[#F9F7F2]/90 backdrop-blur-md py-4 shadow-sm' 
+            : 'bg-transparent py-6'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -35,7 +36,7 @@ const Navbar = () => {
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
           
-          {/* 1. Logo - Updated to use real Image asset */}
+          {/* 1. Logo */}
           <Link href="/" className="relative z-50">
             <div className="relative w-40 h-16"> 
                 <Image 
@@ -48,16 +49,16 @@ const Navbar = () => {
             </div>
           </Link>
 
-          {/* 2. Desktop Links (Hidden on Mobile) */}
+          {/* 2. Desktop Links */}
           <div className="hidden md:flex items-center gap-8 text-[#02303A] font-medium">
-            {['Shop Coffee', 'Our Menu', 'The Story', 'Locations'].map((item) => (
+            {navItems.map((item) => (
               <Link 
                 key={item} 
-                href="#" 
+                // UPDATE: Logic to link 'Contact Us' to the new page
+                href={item === 'Contact Us' ? '/contact' : '#'} 
                 className="hover:text-[#E09F3E] transition-colors relative group"
               >
                 {item}
-                {/* Hover Underline Animation */}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#E09F3E] transition-all group-hover:w-full" />
               </Link>
             ))}
@@ -68,7 +69,6 @@ const Navbar = () => {
             <button
               type="button"
               aria-label="Search"
-              title="Search"
               className="text-[#02303A] hover:text-[#E09F3E] transition-colors"
             >
               <Search size={20} />
@@ -77,11 +77,9 @@ const Navbar = () => {
             <button
               type="button"
               aria-label="Open cart"
-              title="Open cart"
               className="relative text-[#02303A] hover:text-[#E09F3E] transition-colors"
             >
               <ShoppingBag size={20} />
-              {/* Cart Badge */}
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
             </button>
 
@@ -93,11 +91,9 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* 4. Mobile Menu Button (Hamburger) */}
+          {/* 4. Mobile Menu Button */}
           <button
             type="button"
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-            title={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             className="md:hidden text-[#02303A] z-50"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
@@ -106,7 +102,7 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-      {/* --- MOBILE FULLSCREEN MENU --- */}
+      {/* --- MOBILE MENU --- */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -116,10 +112,10 @@ const Navbar = () => {
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
             className="fixed inset-0 bg-[#F9F7F2] z-40 flex flex-col items-center justify-center space-y-8 md:hidden"
           >
-            {['Shop Coffee', 'Our Menu', 'The Story', 'Locations', 'Book a Table'].map((item) => (
+            {[...navItems, 'Book a Table'].map((item) => (
               <Link 
                 key={item} 
-                href="#" 
+                href={item === 'Contact Us' ? '/contact' : '#'}
                 className="text-3xl font-serif text-[#02303A]"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
