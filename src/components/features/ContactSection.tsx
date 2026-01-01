@@ -95,8 +95,8 @@ const ContactSection = () => {
 
             {/* Email Card */}
             <div className="p-8 bg-white border border-[#02303A]/10 rounded-3xl shadow-sm">
-              <Mail className="w-10 h-10 mb-6 text-[#02303A]" />
-              <h3 className="font-serif text-2xl mb-2 text-[#02303A]">Direct Email</h3>
+              <Mail className="w-10 h-10 mb-6 text-[#02303A]" /> 
+              <h2 className="font-serif text-2xl mb-2 text-[#02303A]">Direct Email</h2>
               <p className="text-[#02303A]/70 mb-4">
                 Prefer to email us directly? No problem.
               </p>
