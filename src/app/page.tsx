@@ -2,7 +2,7 @@ import React from 'react';
 import HeroSection from '@/components/features/HeroSection';
 import ProductSlider from '@/components/features/ProductSlider';
 import InstagramFeed from '@/components/features/InstagramFeed';
-// REMOVED: import ContactSection from ...
+
 
 export default function Home() {
   return (
