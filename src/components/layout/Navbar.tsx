@@ -27,6 +27,7 @@ const Navbar = () => {
     if (name === 'Our Story') return '/our-story';
     if (name === 'Our Menu') return '/menu';
     if (name === 'Locations') return '/locations';
+    if (name === 'Shop') return '/shop';
     return '#'; 
   };
 

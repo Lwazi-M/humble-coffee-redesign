@@ -36,8 +36,9 @@ const Footer = () => {
             <div className="space-y-4">
               <h4 className="font-bold text-[#E09F3E]">Shop</h4>
               <ul className="space-y-2 opacity-80">
-                <li><Link href="#" className="hover:text-white transition-colors">Coffee Beans</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Merch</Link></li>
+                {/* Updated links to point to /shop */}
+                <li><Link href="/shop" className="hover:text-white transition-colors">Coffee Beans</Link></li>
+                <li><Link href="/shop" className="hover:text-white transition-colors">Merch</Link></li>
               </ul>
             </div>
             <div className="space-y-4">
@@ -45,7 +46,6 @@ const Footer = () => {
               <ul className="space-y-2 opacity-80">
                 <li><Link href="/our-story" className="hover:text-white transition-colors">Our Story</Link></li>
                 <li><Link href="/locations" className="hover:text-white transition-colors">Locations</Link></li>
-                {/* --- ADDED FAQ LINK HERE --- */}
                 <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
                 <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
               </ul>
@@ -61,7 +61,7 @@ const Footer = () => {
               <p className="flex items-center gap-2"><Mail size={18} /> amy@humblecoffee.co.za</p>
             </div>
             
-            {/* UPDATED: Social Media Links */}
+            {/* Social Media Links */}
             <div className="flex gap-4 pt-2">
               <a 
                 href="https://www.instagram.com/humblecoffeeza/"
