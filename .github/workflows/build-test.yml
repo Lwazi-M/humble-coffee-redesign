@@ -26,4 +26,9 @@ jobs:
       run: npm ci
 
     - name: Try to Build 🛠️
+      # 👇 THIS IS THE NEW PART 👇
+      env:
+        NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      # 👆 --------------------- 👆
       run: npm run build
