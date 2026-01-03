@@ -25,7 +25,8 @@ const Navbar = () => {
   const getLinkPath = (name: string) => {
     if (name === 'Contact Us') return '/contact';
     if (name === 'Our Story') return '/our-story';
-    return '#'; // Default for items we haven't built yet
+    if (name === 'Our Menu') return '/menu'; // <--- NEW LINK ADDED HERE
+    return '#'; 
   };
 
   return (
