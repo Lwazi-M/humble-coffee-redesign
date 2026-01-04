@@ -6,9 +6,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Menu, X, Search, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { createClient } from '@/utils/supabase/client'; // Import Supabase
+import { createClient } from '@/utils/supabase/client';
+import { useCart } from '@/context/CartContext'; // <--- 1. Import Cart Hook
 
-// --- STATIC PAGES (These stay hardcoded) ---
+// --- STATIC PAGES ---
 const STATIC_PAGES = [
   { name: 'FAQs', url: '/faq' },
   { name: 'From Our Humble Kitchen', url: '/menu' },
@@ -24,12 +25,15 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
-  // New State for Real Results
+  // Cart Hook
+  const { toggleCart, itemsCount } = useCart(); // <--- 2. Get Cart Data
+
+  // Search Results State
   const [productResults, setProductResults] = useState<any[]>([]);
   const [pageResults, setPageResults] = useState<any[]>([]);
   const supabase = createClient();
 
-  // Handle Scroll
+  // Handle Scroll & Esc Key
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
@@ -59,26 +63,24 @@ const Navbar = () => {
         return;
       }
 
-      // 1. Search Pages (Local Filter)
+      // 1. Search Pages
       const matchingPages = STATIC_PAGES.filter(page => 
         page.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setPageResults(matchingPages);
 
-      // 2. Search Products (Supabase Database)
-      // 'ilike' means case-insensitive match (e.g. "coffee" matches "Coffee")
+      // 2. Search Products (Supabase)
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .ilike('name', `%${searchQuery}%`)
-        .limit(5); // Limit to top 5 results
+        .limit(5);
 
       if (!error && data) {
         setProductResults(data);
       }
     };
 
-    // Small delay to prevent searching on every single keystroke instantly
     const debounceTimer = setTimeout(performSearch, 300);
     return () => clearTimeout(debounceTimer);
 
@@ -148,13 +150,21 @@ const Navbar = () => {
               <Search size={20} />
             </button>
             
+            {/* --- UPDATED BASKET BUTTON --- */}
             <button
               type="button"
               aria-label="Open cart"
+              onClick={toggleCart} // <--- Opens the Drawer
               className="relative text-[#02303A] hover:text-[#E09F3E] transition-colors"
             >
               <ShoppingBag size={20} />
-              <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+              
+              {/* Badge: Only shows if items > 0 */}
+              {itemsCount > 0 && (
+                <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#E09F3E] text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-[#F9F7F2]">
+                  {itemsCount}
+                </span>
+              )}
             </button>
 
             <button
@@ -202,7 +212,6 @@ const Navbar = () => {
                 <button 
                   onClick={() => setIsSearchOpen(false)}
                   aria-label="Close search"
-                  title="Close search"
                   className="p-2 hover:bg-[#02303A]/5 rounded-full transition-colors"
                 >
                   <X className="text-[#02303A] w-8 h-8" />
@@ -212,12 +221,11 @@ const Navbar = () => {
               {/* Search Results Grid */}
               <div className="grid md:grid-cols-3 gap-12">
                 
-                {/* 1. SUGGESTIONS (Combined) */}
+                {/* 1. SUGGESTIONS */}
                 <div className="space-y-6">
                   <h4 className="text-sm font-bold tracking-widest text-[#02303A]/50 uppercase">Suggestions</h4>
                   {searchQuery && (productResults.length > 0 || pageResults.length > 0) ? (
                     <ul className="space-y-3">
-                      {/* Show Page matches first */}
                       {pageResults.map((item, idx) => (
                         <li key={`p-${idx}`}>
                           <Link 
@@ -229,7 +237,6 @@ const Navbar = () => {
                           </Link>
                         </li>
                       ))}
-                      {/* Then Product matches */}
                       {productResults.slice(0, 3).map((item, idx) => (
                         <li key={`prod-${idx}`}>
                           <Link 
@@ -247,7 +254,7 @@ const Navbar = () => {
                   )}
                 </div>
 
-                {/* 2. PRODUCTS (Visual) */}
+                {/* 2. PRODUCTS */}
                 <div className="space-y-6">
                   <h4 className="text-sm font-bold tracking-widest text-[#02303A]/50 uppercase">Products</h4>
                   {searchQuery && productResults.length > 0 ? (
@@ -255,7 +262,7 @@ const Navbar = () => {
                       {productResults.map((item, idx) => (
                         <li key={idx}>
                           <Link 
-                            href="/shop" // Eventually this should go to /shop/[slug]
+                            href="/shop" 
                             onClick={() => setIsSearchOpen(false)}
                             className="flex items-center gap-4 group"
                           >
@@ -281,7 +288,7 @@ const Navbar = () => {
                   )}
                 </div>
 
-                {/* 3. PAGES (Visual Links) */}
+                {/* 3. PAGES */}
                 <div className="space-y-6">
                   <h4 className="text-sm font-bold tracking-widest text-[#02303A]/50 uppercase">Pages</h4>
                   {searchQuery && pageResults.length > 0 ? (

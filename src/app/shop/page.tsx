@@ -5,24 +5,23 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
-import { createClient } from '@/utils/supabase/client'; // Import the helper we made
+import { createClient } from '@/utils/supabase/client';
+import { useCart } from '@/context/CartContext'; // <--- 1. Import the Cart Hook
 
 const categories = ["All", "Coffee", "Merch", "Pantry"];
 
 export default function ShopPage() {
   const [activeCategory, setActiveCategory] = useState("All");
-  
-  // 1. STATE: We start with an empty array because we don't know the products yet
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 2. SUPABASE: Initialize the client
+  // 2. Get the addToCart function from our "Global Brain"
+  const { addToCart } = useCart();
+
   const supabase = createClient();
 
-  // 3. FETCH: Get data when the page loads
   useEffect(() => {
     const fetchProducts = async () => {
-      // Ask Supabase for everything in the 'products' table
       const { data, error } = await supabase.from('products').select('*');
       
       if (error) {
@@ -36,7 +35,6 @@ export default function ShopPage() {
     fetchProducts();
   }, []);
 
-  // Filter logic works the same, but uses the fetched 'products' state
   const filteredProducts = activeCategory === "All" 
     ? products 
     : products.filter(p => p.category === activeCategory);
@@ -79,7 +77,6 @@ export default function ShopPage() {
       {/* --- PRODUCT GRID --- */}
       <div className="container mx-auto px-6 max-w-6xl">
         
-        {/* LOADING STATE */}
         {isLoading ? (
           <div className="flex justify-center items-center h-64 text-[#02303A]/50 animate-pulse">
              Loading products from cloud...
@@ -102,21 +99,21 @@ export default function ShopPage() {
                 >
                   {/* Image Area */}
                   <div className="relative h-72 bg-[#F4F4F4] p-6 flex items-center justify-center overflow-hidden">
-                     <Image 
-                       src={product.image}
-                       alt={product.name}
-                       width={400}
-                       height={400}
-                       className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-500 drop-shadow-md"
-                     />
-                     <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-[#02303A] shadow-sm">
-                       {product.category}
-                     </div>
-                     {product.name.includes("Festive") && (
-                         <div className="absolute top-4 left-4 bg-[#E09F3E] text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
-                           Limited
-                         </div>
-                     )}
+                      <Image 
+                        src={product.image}
+                        alt={product.name}
+                        width={400}
+                        height={400}
+                        className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-500 drop-shadow-md"
+                      />
+                      <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-[#02303A] shadow-sm">
+                        {product.category}
+                      </div>
+                      {product.name.includes("Festive") && (
+                          <div className="absolute top-4 left-4 bg-[#E09F3E] text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                            Limited
+                          </div>
+                      )}
                   </div>
 
                   {/* Details */}
@@ -131,9 +128,10 @@ export default function ShopPage() {
                       {product.desc}
                     </p>
 
+                    {/* 3. Button now calls addToCart instead of alert */}
                     <button 
                       className="w-full py-3 bg-[#F9F7F2] border-2 border-[#02303A] text-[#02303A] font-bold rounded-xl hover:bg-[#02303A] hover:text-[#F9F7F2] transition-colors flex items-center justify-center gap-2"
-                      onClick={() => alert(`Added ${product.name} to cart!`)}
+                      onClick={() => addToCart(product)}
                     >
                       <ShoppingBag size={18} /> Add to Cart
                     </button>
