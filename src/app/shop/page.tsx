@@ -5,8 +5,9 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link'; // <--- Added Link import
 import { createClient } from '@/utils/supabase/client';
-import { useCart } from '@/context/CartContext'; // <--- 1. Import the Cart Hook
+import { useCart } from '@/context/CartContext';
 
 const categories = ["All", "Coffee", "Merch", "Pantry"];
 
@@ -15,9 +16,7 @@ export default function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 2. Get the addToCart function from our "Global Brain"
   const { addToCart } = useCart();
-
   const supabase = createClient();
 
   useEffect(() => {
@@ -27,7 +26,9 @@ export default function ShopPage() {
       if (error) {
         console.error('Error fetching products:', error);
       } else {
-        setProducts(data || []);
+        // Sort by id so they don't jump around
+        const sortedData = (data || []).sort((a, b) => a.id - b.id);
+        setProducts(sortedData);
       }
       setIsLoading(false);
     };
@@ -97,41 +98,51 @@ export default function ShopPage() {
                   transition={{ duration: 0.3 }}
                   className="bg-white rounded-3xl overflow-hidden border border-[#02303A]/5 shadow-sm hover:shadow-xl transition-shadow group flex flex-col"
                 >
-                  {/* Image Area */}
-                  <div className="relative h-72 bg-[#F4F4F4] p-6 flex items-center justify-center overflow-hidden">
-                      <Image 
-                        src={product.image}
-                        alt={product.name}
-                        width={400}
-                        height={400}
-                        className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-500 drop-shadow-md"
-                      />
-                      <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-[#02303A] shadow-sm">
-                        {product.category}
-                      </div>
-                      {product.name.includes("Festive") && (
-                          <div className="absolute top-4 left-4 bg-[#E09F3E] text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
-                            Limited
-                          </div>
-                      )}
-                  </div>
+                  
+                  {/* Image Area - LINKED */}
+                  <Link href={`/shop/${product.id}`} className="cursor-pointer block">
+                    <div className="relative h-72 bg-[#F4F4F4] p-6 flex items-center justify-center overflow-hidden">
+                        <Image 
+                          src={product.image}
+                          alt={product.name}
+                          width={400}
+                          height={400}
+                          className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-500 drop-shadow-md"
+                        />
+                        <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-[#02303A] shadow-sm">
+                          {product.category}
+                        </div>
+                        {product.name.includes("Festive") && (
+                            <div className="absolute top-4 left-4 bg-[#E09F3E] text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                              Limited
+                            </div>
+                        )}
+                    </div>
+                  </Link>
 
                   {/* Details */}
                   <div className="p-6 flex flex-col flex-grow">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xl font-bold text-[#02303A] leading-tight">{product.name}</h3>
-                      <span className="text-[#E09F3E] font-serif font-bold text-lg whitespace-nowrap ml-2">{product.price}</span>
-                    </div>
+                    
+                    {/* Header - LINKED */}
+                    <Link href={`/shop/${product.id}`} className="cursor-pointer block group-hover:underline">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-xl font-bold text-[#02303A] leading-tight">{product.name}</h3>
+                        <span className="text-[#E09F3E] font-serif font-bold text-lg whitespace-nowrap ml-2">{product.price}</span>
+                      </div>
+                    </Link>
+
                     <p className="text-xs font-bold uppercase tracking-wider text-[#02303A]/50 mb-4">{product.weight}</p>
                     
-                    <p className="text-[#02303A]/80 text-sm leading-relaxed mb-6 flex-grow">
+                    <p className="text-[#02303A]/80 text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
                       {product.desc}
                     </p>
 
-                    {/* 3. Button now calls addToCart instead of alert */}
                     <button 
                       className="w-full py-3 bg-[#F9F7F2] border-2 border-[#02303A] text-[#02303A] font-bold rounded-xl hover:bg-[#02303A] hover:text-[#F9F7F2] transition-colors flex items-center justify-center gap-2"
-                      onClick={() => addToCart(product)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Stop click from bubbling to the Link
+                        addToCart(product);
+                      }}
                     >
                       <ShoppingBag size={18} /> Add to Cart
                     </button>
