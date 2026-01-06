@@ -5,6 +5,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link'; // <--- 1. Import Link
 import { useCart } from '@/context/CartContext';
 
 const CartDrawer = () => {
@@ -93,10 +94,18 @@ const CartDrawer = () => {
                   <span>Total</span>
                   <span>R {cartTotal.toFixed(2)}</span>
                 </div>
-                <button className="w-full py-4 bg-[#02303A] text-[#F9F7F2] rounded-xl font-bold hover:bg-[#02303A]/90 transition-all flex justify-between items-center px-6 group">
+                
+                {/* --- 2. UPDATED CHECKOUT BUTTON --- */}
+                <Link 
+                   href="/checkout"
+                   onClick={toggleCart} // Close the drawer when clicked
+                   className="w-full py-4 bg-[#02303A] text-[#F9F7F2] rounded-xl font-bold hover:bg-[#02303A]/90 transition-all flex justify-between items-center px-6 group"
+                >
                   <span>Checkout</span>
                   <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-                </button>
+                </Link>
+                {/* ---------------------------------- */}
+                
               </div>
             )}
           </motion.div>

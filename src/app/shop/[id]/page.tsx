@@ -6,38 +6,53 @@ import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ShoppingBag, Truck, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Truck, ShieldCheck, ArrowRight } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { useCart } from '@/context/CartContext';
 
 export default function ProductPage() {
-  const { id } = useParams(); // Get the ID from the URL (e.g., 5)
+  const { id } = useParams(); 
   const { addToCart } = useCart();
   const [product, setProduct] = useState<any>(null);
+  
+  // NEW: State for related items
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const supabase = createClient();
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchData = async () => {
       if (!id) return;
 
-      // Fetch only the ONE product that matches the ID
-      const { data, error } = await supabase
+      setIsLoading(true);
+
+      // 1. Fetch MAIN Product
+      const { data: mainProduct, error: mainError } = await supabase
         .from('products')
         .select('*')
         .eq('id', id)
-        .single(); // .single() tells Supabase we expect only one result
+        .single();
 
-      if (error) {
-        console.error('Error fetching product:', error);
+      if (mainError) {
+        console.error('Error fetching product:', mainError);
       } else {
-        setProduct(data);
+        setProduct(mainProduct);
+
+        // 2. Fetch RELATED Products (Get 3 items that are NOT this one)
+        // We filter by category if possible, or just random ones
+        const { data: relatedData } = await supabase
+            .from('products')
+            .select('*')
+            .neq('id', id) // 'neq' means "Not Equal"
+            .limit(3);     // Only get 3
+        
+        setRelatedProducts(relatedData || []);
       }
       setIsLoading(false);
     };
 
-    fetchProduct();
+    fetchData();
   }, [id]);
 
   if (isLoading) {
@@ -50,10 +65,10 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#F9F7F2] flex flex-col items-center justify-center text-[#02303A]">
-        <h2 className="text-3xl font-serif mb-4">Product Not Found</h2>
-        <Link href="/shop" className="underline hover:text-[#E09F3E]">Back to Shop</Link>
-      </div>
+        <div className="min-h-screen bg-[#F9F7F2] flex flex-col items-center justify-center text-[#02303A]">
+          <h2 className="text-3xl font-serif mb-4">Product Not Found</h2>
+          <Link href="/shop" className="underline hover:text-[#E09F3E]">Back to Shop</Link>
+        </div>
     );
   }
 
@@ -61,7 +76,7 @@ export default function ProductPage() {
     <main className="min-h-screen bg-[#F9F7F2] pt-32 pb-20">
       <div className="container mx-auto px-6 max-w-6xl">
         
-        {/* Breadcrumb / Back */}
+        {/* Breadcrumb */}
         <Link 
           href="/shop" 
           className="inline-flex items-center gap-2 text-[#02303A]/60 hover:text-[#E09F3E] transition-colors mb-8 font-medium"
@@ -69,7 +84,8 @@ export default function ProductPage() {
           <ArrowLeft size={20} /> Back to Shop
         </Link>
 
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
+        {/* --- MAIN PRODUCT AREA --- */}
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-start mb-24">
           
           {/* LEFT: Image */}
           <motion.div 
@@ -116,7 +132,6 @@ export default function ProductPage() {
               {product.desc}
             </div>
 
-            {/* Product Meta (Weight, etc) */}
             <div className="grid grid-cols-2 gap-4 mb-8">
                <div className="bg-white p-4 rounded-xl border border-[#02303A]/5">
                   <span className="block text-xs text-[#02303A]/40 font-bold uppercase mb-1">Weight / Size</span>
@@ -130,17 +145,13 @@ export default function ProductPage() {
                </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-4">
-              <button 
+            <button 
                 onClick={() => addToCart(product)}
                 className="w-full py-4 bg-[#02303A] text-[#F9F7F2] rounded-xl font-bold text-lg hover:bg-[#02303A]/90 transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:-translate-y-1"
               >
                 <ShoppingBag /> Add to Cart
-              </button>
-            </div>
+            </button>
 
-            {/* Trust Badges */}
             <div className="mt-8 pt-8 border-t border-[#02303A]/10 grid grid-cols-2 gap-4 text-sm text-[#02303A]/60">
                <div className="flex items-center gap-2">
                  <Truck size={18} /> Fast Delivery in Durban
@@ -149,10 +160,34 @@ export default function ProductPage() {
                  <ShieldCheck size={18} /> Secure Checkout
                </div>
             </div>
-
           </motion.div>
-
         </div>
+
+        {/* --- NEW: RELATED PRODUCTS SECTION --- */}
+        {relatedProducts.length > 0 && (
+          <div className="border-t border-[#02303A]/10 pt-16">
+            <h3 className="text-3xl font-serif text-[#02303A] mb-8 text-center">You might also like</h3>
+            <div className="grid md:grid-cols-3 gap-8">
+              {relatedProducts.map((item) => (
+                <Link key={item.id} href={`/shop/${item.id}`} className="group">
+                  <div className="bg-white rounded-2xl p-6 border border-[#02303A]/5 hover:shadow-lg transition-all h-full flex flex-col">
+                    <div className="relative h-48 mb-4 bg-[#F4F4F4] rounded-xl flex items-center justify-center overflow-hidden">
+                       <Image 
+                         src={item.image} 
+                         alt={item.name} 
+                         fill 
+                         className="object-contain p-4 group-hover:scale-105 transition-transform" 
+                       />
+                    </div>
+                    <h4 className="font-bold text-[#02303A] text-lg mb-1">{item.name}</h4>
+                    <p className="text-[#E09F3E] font-serif font-bold">{item.price}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </main>
   );
