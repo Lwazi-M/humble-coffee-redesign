@@ -1,22 +1,22 @@
-// src/context/CartContext.tsx
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Define what a Cart Item looks like
 type CartItem = {
-  id: number;
+  id: string | number; // Allows "5-1kg" or normal IDs
   name: string;
-  price: string; // We keep string to display "R 145.00"
+  price: string;
   image: string;
   quantity: number;
+  variant?: string; // Stores "1kg" or "250g"
 };
 
 type CartContextType = {
   cart: CartItem[];
   isCartOpen: boolean;
   addToCart: (product: any) => void;
-  removeFromCart: (id: number) => void;
+  removeFromCart: (id: string | number) => void;
   toggleCart: () => void;
   cartTotal: number;
   itemsCount: number;
@@ -47,7 +47,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const addToCart = (product: any) => {
     setCart((prev) => {
+      // Check if this exact variation is already in the cart
       const existing = prev.find((item) => item.id === product.id);
+      
       if (existing) {
         // If exists, increase quantity
         return prev.map((item) =>
@@ -60,7 +62,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setIsCartOpen(true); // Open drawer when adding
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string | number) => {
     setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
