@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ShoppingBag, Truck, ShieldCheck, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Truck, ShieldCheck } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { useCart } from '@/context/CartContext';
 
@@ -15,7 +15,10 @@ export default function ProductPage() {
   const { addToCart } = useCart();
   const [product, setProduct] = useState<any>(null);
   
-  // NEW: State for related items
+  // NEW: State for variants (Weight & Dynamic Price)
+  const [selectedWeight, setSelectedWeight] = useState<string>(""); 
+  const [currentPrice, setCurrentPrice] = useState<string>("");
+
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -39,13 +42,24 @@ export default function ProductPage() {
       } else {
         setProduct(mainProduct);
 
-        // 2. Fetch RELATED Products (Get 3 items that are NOT this one)
-        // We filter by category if possible, or just random ones
+        // --- INIT WEIGHT & PRICE ---
+        // If weight has a slash (e.g. "250g / 1kg"), pick the first one
+        if (mainProduct.weight && mainProduct.weight.includes('/')) {
+            const firstOption = mainProduct.weight.split('/')[0].trim();
+            setSelectedWeight(firstOption);
+        } else {
+            setSelectedWeight(mainProduct.weight);
+        }
+        
+        // Set initial price (remove "From " if it exists so it looks clean)
+        setCurrentPrice(mainProduct.price.replace("From ", ""));
+
+        // 2. Fetch RELATED Products
         const { data: relatedData } = await supabase
             .from('products')
             .select('*')
-            .neq('id', id) // 'neq' means "Not Equal"
-            .limit(3);     // Only get 3
+            .neq('id', id)
+            .limit(3);
         
         setRelatedProducts(relatedData || []);
       }
@@ -54,6 +68,37 @@ export default function ProductPage() {
 
     fetchData();
   }, [id]);
+
+  // --- PRICING LOGIC ---
+  const handleWeightSelect = (weight: string) => {
+    setSelectedWeight(weight);
+    
+    // Parse the base price (remove 'R' and spaces to get the number)
+    const basePrice = parseFloat(product.price.replace(/[^0-9.]/g, ''));
+    
+    // Logic: If they pick 1kg, multiply price by 3.5. If 50pk, multiply by 4.5
+    let newPrice = basePrice;
+    
+    if (weight.includes("1kg")) {
+        newPrice = basePrice * 3.5;
+    } else if (weight.includes("50pk")) {
+        newPrice = basePrice * 4.5;
+    }
+    
+    setCurrentPrice(`R ${newPrice.toFixed(2)}`);
+  };
+
+  // --- ADD TO CART LOGIC ---
+  const handleAddToCart = () => {
+    addToCart({
+        ...product,
+        // Create a unique ID so "250g" and "1kg" don't merge in the cart
+        id: `${product.id}-${selectedWeight}`, 
+        name: `${product.name} (${selectedWeight})`,
+        price: currentPrice,
+        variant: selectedWeight
+    });
+  };
 
   if (isLoading) {
     return (
@@ -71,6 +116,11 @@ export default function ProductPage() {
         </div>
     );
   }
+
+  // Split options (e.g. ["250g", "1kg"])
+  const weightOptions = product.weight.includes('/') 
+    ? product.weight.split('/').map((s: string) => s.trim())
+    : [product.weight];
 
   return (
     <main className="min-h-screen bg-[#F9F7F2] pt-32 pb-20">
@@ -124,29 +174,44 @@ export default function ProductPage() {
               {product.name}
             </h1>
 
-            <p className="text-3xl font-bold text-[#02303A] mb-8">
-              {product.price}
+            {/* DYNAMIC PRICE DISPLAY */}
+            <p className="text-3xl font-bold text-[#02303A] mb-8 transition-all duration-300">
+              {currentPrice}
             </p>
 
             <div className="prose text-[#02303A]/80 mb-8 text-lg leading-relaxed">
               {product.desc}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-8">
-               <div className="bg-white p-4 rounded-xl border border-[#02303A]/5">
-                  <span className="block text-xs text-[#02303A]/40 font-bold uppercase mb-1">Weight / Size</span>
-                  <span className="text-[#02303A] font-medium">{product.weight}</span>
-               </div>
-               <div className="bg-white p-4 rounded-xl border border-[#02303A]/5">
-                  <span className="block text-xs text-[#02303A]/40 font-bold uppercase mb-1">Availability</span>
-                  <span className="text-green-600 font-medium flex items-center gap-1">
-                    In Stock
-                  </span>
-               </div>
+            {/* WEIGHT SELECTOR */}
+            <div className="mb-8">
+                <label className="block text-xs text-[#02303A]/40 font-bold uppercase mb-3">Choose Size</label>
+                <div className="flex gap-3 flex-wrap">
+                    {weightOptions.map((option: string) => (
+                        <button
+                            key={option}
+                            onClick={() => handleWeightSelect(option)}
+                            className={`px-6 py-3 rounded-xl font-bold border-2 transition-all ${
+                                selectedWeight === option 
+                                ? "border-[#02303A] bg-[#02303A] text-white" 
+                                : "border-[#02303A]/10 bg-white text-[#02303A] hover:border-[#02303A]/30"
+                            }`}
+                        >
+                            {option}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Availability */}
+            <div className="mb-8">
+               <span className="text-green-600 font-medium flex items-center gap-1 text-sm">
+                 In Stock
+               </span>
             </div>
 
             <button 
-                onClick={() => addToCart(product)}
+                onClick={handleAddToCart}
                 className="w-full py-4 bg-[#02303A] text-[#F9F7F2] rounded-xl font-bold text-lg hover:bg-[#02303A]/90 transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:-translate-y-1"
               >
                 <ShoppingBag /> Add to Cart
@@ -163,7 +228,7 @@ export default function ProductPage() {
           </motion.div>
         </div>
 
-        {/* --- NEW: RELATED PRODUCTS SECTION --- */}
+        {/* --- RELATED PRODUCTS SECTION --- */}
         {relatedProducts.length > 0 && (
           <div className="border-t border-[#02303A]/10 pt-16">
             <h3 className="text-3xl font-serif text-[#02303A] mb-8 text-center">You might also like</h3>
