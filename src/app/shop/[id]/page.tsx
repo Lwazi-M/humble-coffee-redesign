@@ -43,7 +43,7 @@ export default function ProductPage() {
         setProduct(mainProduct);
 
         // --- INIT WEIGHT & PRICE ---
-        // If weight has a slash (e.g. "250g / 1kg"), pick the first one
+        // If weight has a slash (e.g. "250g / 1kg" or "10's / 50's"), pick the first one
         if (mainProduct.weight && mainProduct.weight.includes('/')) {
             const firstOption = mainProduct.weight.split('/')[0].trim();
             setSelectedWeight(firstOption);
@@ -76,11 +76,17 @@ export default function ProductPage() {
     // Parse the base price (remove 'R' and spaces to get the number)
     const basePrice = parseFloat(product.price.replace(/[^0-9.]/g, ''));
     
-    // Logic: If they pick 1kg, multiply price by 3.5. If 50pk, multiply by 4.5
     let newPrice = basePrice;
+    
+    // Logic: 
+    // 1. Bulk beans (1kg) -> 3.5x multiplier
+    // 2. Pods (50's) -> Fixed price R500
+    // 3. Wholesale (50pk) -> 4.5x multiplier
     
     if (weight.includes("1kg")) {
         newPrice = basePrice * 3.5;
+    } else if (weight.includes("50's")) {
+        newPrice = 500.00; // Fixed price for 50 pods
     } else if (weight.includes("50pk")) {
         newPrice = basePrice * 4.5;
     }
