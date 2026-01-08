@@ -37,7 +37,7 @@ const CartDrawer = () => {
               <h2 className="text-2xl font-serif text-[#02303A] flex items-center gap-2">
                 <ShoppingBag className="text-[#E09F3E]" /> Your Basket
               </h2>
-              <button onClick={toggleCart} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <button onClick={toggleCart} title="Close cart" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                 <X size={24} className="text-[#02303A]" />
               </button>
             </div>
