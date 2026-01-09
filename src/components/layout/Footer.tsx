@@ -15,8 +15,8 @@ const Footer = () => {
           
           {/* Brand */}
           <div className="space-y-4">
-            {/* Logo - Static Image (No Link), White Filter */}
-            <div className="relative w-40 h-16"> 
+            {/* Logo - White Filter applied via CSS */}
+            <Link href="/" className="relative w-40 h-16 block"> 
                 <Image 
                     src="/assets/secondary_logo.webp" 
                     alt="Humble Coffee"
@@ -24,7 +24,7 @@ const Footer = () => {
                     className="object-contain object-left brightness-0 invert" 
                     priority
                 />
-            </div>
+            </Link>
           
             <p className="opacity-80 max-w-xs">
               Ethically sourced, locally roasted, and served with love in Durban.
@@ -32,18 +32,20 @@ const Footer = () => {
           </div>
 
           {/* Links */}
-          <div className="flex gap-12">
+          <div className="flex gap-12 flex-wrap">
             <div className="space-y-4">
               <h4 className="font-bold text-[#E09F3E]">Shop</h4>
               <ul className="space-y-2 opacity-80">
-                {/* Updated links to point to /shop */}
                 <li><Link href="/shop" className="hover:text-white transition-colors">Coffee Beans</Link></li>
                 <li><Link href="/shop" className="hover:text-white transition-colors">Merch</Link></li>
+                <li><Link href="/shop" className="hover:text-white transition-colors">Pantry</Link></li>
               </ul>
             </div>
+            
             <div className="space-y-4">
               <h4 className="font-bold text-[#E09F3E]">Company</h4>
               <ul className="space-y-2 opacity-80">
+                <li><Link href="/menu" className="hover:text-white transition-colors">Our Menu</Link></li>
                 <li><Link href="/our-story" className="hover:text-white transition-colors">Our Story</Link></li>
                 <li><Link href="/locations" className="hover:text-white transition-colors">Locations</Link></li>
                 <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
@@ -58,7 +60,14 @@ const Footer = () => {
             <div className="opacity-80 space-y-2">
               <p className="flex items-center gap-2"><MapPin size={18} /> 222 Lilian Ngoyi Rd, Durban</p>
               <p className="flex items-center gap-2"><MapPin size={18} /> 262 Florida Rd, Durban</p>
-              <p className="flex items-center gap-2"><Mail size={18} /> amy@humblecoffee.co.za</p>
+              
+              {/* Clickable Email */}
+              <a 
+                href="mailto:amy@humblecoffee.co.za" 
+                className="flex items-center gap-2 hover:text-[#E09F3E] transition-colors"
+              >
+                <Mail size={18} /> amy@humblecoffee.co.za
+              </a>
             </div>
             
             {/* Social Media Links */}
