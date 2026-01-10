@@ -283,7 +283,7 @@ const Navbar = () => {
                     </ul>
                   ) : (
                     <p className="text-[#02303A]/40 italic">
-                       {searchQuery ? "No products found." : "Waiting for input..."}
+                        {searchQuery ? "No products found." : "Waiting for input..."}
                     </p>
                   )}
                 </div>
@@ -317,13 +317,13 @@ const Navbar = () => {
               {/* Search Footer */}
               {searchQuery && (
                 <div className="mt-12 pt-6 border-t border-[#02303A]/10 flex justify-end">
-                   <Link 
-                     href="/shop" 
-                     onClick={() => setIsSearchOpen(false)}
-                     className="flex items-center gap-2 text-[#02303A] hover:text-[#E09F3E] transition-colors text-lg"
-                   >
-                     View all results for &quot;{searchQuery}&quot; <ArrowRight size={20} />
-                   </Link>
+                    <Link 
+                      href="/shop" 
+                      onClick={() => setIsSearchOpen(false)}
+                      className="flex items-center gap-2 text-[#02303A] hover:text-[#E09F3E] transition-colors text-lg"
+                    >
+                      View all results for &quot;{searchQuery}&quot; <ArrowRight size={20} />
+                    </Link>
                 </div>
               )}
 
