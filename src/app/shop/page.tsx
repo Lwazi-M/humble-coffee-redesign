@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link'; // <--- Added Link import
+import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { useCart } from '@/context/CartContext';
 
@@ -35,6 +35,31 @@ export default function ShopPage() {
 
     fetchProducts();
   }, []);
+
+  // --- NEW: Smart Add to Cart Logic ---
+  const handleQuickAdd = (e: React.MouseEvent, product: any) => {
+    e.preventDefault(); 
+    e.stopPropagation(); // Stop click from bubbling to the Link
+
+    // 1. Determine Default Weight (First option)
+    let defaultWeight = product.weight;
+    if (product.weight && product.weight.includes('/')) {
+        defaultWeight = product.weight.split('/')[0].trim();
+    }
+
+    // 2. Determine Base Price (Clean "From R 145.00" -> "R 145.00")
+    const priceNum = parseFloat(product.price.replace(/[^0-9.]/g, ''));
+    const priceStr = `R ${priceNum.toFixed(2)}`;
+
+    // 3. Add to Cart with consistent Variant ID
+    addToCart({
+        ...product,
+        id: `${product.id}-${defaultWeight}`, // e.g. "5-250g"
+        name: `${product.name} (${defaultWeight})`,
+        price: priceStr,
+        variant: defaultWeight
+    });
+  };
 
   const filteredProducts = activeCategory === "All" 
     ? products 
@@ -139,10 +164,7 @@ export default function ShopPage() {
 
                     <button 
                       className="w-full py-3 bg-[#F9F7F2] border-2 border-[#02303A] text-[#02303A] font-bold rounded-xl hover:bg-[#02303A] hover:text-[#F9F7F2] transition-colors flex items-center justify-center gap-2"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Stop click from bubbling to the Link
-                        addToCart(product);
-                      }}
+                      onClick={(e) => handleQuickAdd(e, product)}
                     >
                       <ShoppingBag size={18} /> Add to Cart
                     </button>

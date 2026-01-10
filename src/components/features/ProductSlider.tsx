@@ -9,8 +9,18 @@ import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
 import { useCart } from '@/context/CartContext';
 
+// Define the shape of our data for better safety
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  image: string;
+  category: string;
+  weight: string;
+}
+
 const ProductSlider = () => {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const { addToCart } = useCart();
   const supabase = createClient();
 
@@ -21,7 +31,7 @@ const ProductSlider = () => {
         .from('products')
         .select('*')
         .limit(4)
-        .order('id', { ascending: true }); // Or use .order('created_at') if you have that
+        .order('id', { ascending: true }); 
       
       if (data) setProducts(data);
     };
@@ -29,7 +39,7 @@ const ProductSlider = () => {
     fetchProducts();
   }, []);
 
-  const handleQuickAdd = (e: React.MouseEvent, product: any) => {
+  const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
     e.preventDefault(); // Stop the click from taking us to the product page
     e.stopPropagation();
 
@@ -81,7 +91,7 @@ const ProductSlider = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               {/* Link Wrapper */}
-              <Link href={`/shop/${product.id}`} className="block">
+              <Link href={`/shop/${product.id}`} className="block h-full">
                 
                 {/* Image Container */}
                 <div className="relative aspect-square bg-[#F9F7F2] rounded-2xl overflow-hidden mb-4">
@@ -89,6 +99,7 @@ const ProductSlider = () => {
                     src={product.image} 
                     alt={product.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
                   />
                   
@@ -120,9 +131,11 @@ const ProductSlider = () => {
                         {product.price}
                      </p>
                      {/* Visual Indicator of weight options */}
-                     <span className="text-[10px] text-[#02303A]/40 font-bold uppercase bg-[#02303A]/5 px-1.5 py-0.5 rounded">
-                        {product.weight}
-                     </span>
+                     {product.weight && (
+                       <span className="text-[10px] text-[#02303A]/40 font-bold uppercase bg-[#02303A]/5 px-1.5 py-0.5 rounded">
+                          {product.weight}
+                       </span>
+                     )}
                   </div>
                 </div>
 
