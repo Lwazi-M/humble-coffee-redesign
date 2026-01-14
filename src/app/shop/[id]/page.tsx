@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ShoppingBag, Truck, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Truck, ShieldCheck, Gift } from 'lucide-react'; // Added Gift Icon
 import { createClient } from '@/utils/supabase/client';
 import { useCart } from '@/context/CartContext';
 
@@ -15,7 +15,8 @@ export default function ProductPage() {
   const { addToCart } = useCart();
   const [product, setProduct] = useState<any>(null);
   
-  const [selectedWeight, setSelectedWeight] = useState<string>(""); 
+  // Renamed from 'selectedWeight' to 'selectedVariant' to cover both Weight (Coffee) and Amount (Gift Card)
+  const [selectedVariant, setSelectedVariant] = useState<string>(""); 
   const [currentPrice, setCurrentPrice] = useState<string>("");
 
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
@@ -39,12 +40,12 @@ export default function ProductPage() {
       } else {
         setProduct(mainProduct);
 
-        // Init Weight
+        // Init Variant
         if (mainProduct.weight && mainProduct.weight.includes('/')) {
             const firstOption = mainProduct.weight.split('/')[0].trim();
-            setSelectedWeight(firstOption);
+            setSelectedVariant(firstOption);
         } else {
-            setSelectedWeight(mainProduct.weight);
+            setSelectedVariant(mainProduct.weight);
         }
         
         // Init Price
@@ -65,16 +66,22 @@ export default function ProductPage() {
   }, [id]);
 
   // --- UPDATED PRICING LOGIC ---
-  const handleWeightSelect = (weight: string) => {
-    setSelectedWeight(weight);
+  const handleVariantSelect = (variant: string) => {
+    setSelectedVariant(variant);
     
-    // Get the base (250g) price
+    // Get the base price
     const basePrice = parseFloat(product.price.replace(/[^0-9.]/g, ''));
     let newPrice = basePrice;
     
     const name = product.name || "";
 
-    if (weight.includes("1kg")) {
+    // 1. GIFT CARD LOGIC
+    if (name.includes("Gift Card")) {
+        // The variant IS the price (e.g. "R250" -> 250)
+        newPrice = parseFloat(variant.replace(/[^0-9.]/g, ''));
+    }
+    // 2. COFFEE WEIGHT LOGIC
+    else if (variant.includes("1kg")) {
         // Specific prices for 1kg bags based on your menu
         if (name.includes("House Espresso") || name.includes("Love")) {
             newPrice = 420.00;
@@ -90,7 +97,7 @@ export default function ProductPage() {
             // Default multiplier if we add new coffees later
             newPrice = basePrice * 3.75; 
         }
-    } else if (weight.includes("50's")) {
+    } else if (variant.includes("50's")) {
         // Pods logic
         newPrice = 500.00; 
     }
@@ -101,19 +108,21 @@ export default function ProductPage() {
   const handleAddToCart = () => {
     addToCart({
         ...product,
-        id: `${product.id}-${selectedWeight}`, 
-        name: `${product.name} (${selectedWeight})`,
+        id: `${product.id}-${selectedVariant}`, 
+        name: `${product.name} (${selectedVariant})`,
         price: currentPrice,
-        variant: selectedWeight
+        variant: selectedVariant
     });
   };
 
   if (isLoading) return <div className="min-h-screen bg-[#F9F7F2] flex items-center justify-center animate-pulse text-[#02303A]">Loading...</div>;
   if (!product) return <div>Not Found</div>;
 
-  const weightOptions = product.weight.includes('/') 
+  const variantOptions = product.weight.includes('/') 
     ? product.weight.split('/').map((s: string) => s.trim())
     : [product.weight];
+
+  const isGiftCard = product.name.includes("Gift Card");
 
   return (
     <main className="min-h-screen bg-[#F9F7F2] pt-32 pb-20">
@@ -139,15 +148,17 @@ export default function ProductPage() {
               {product.desc}
             </div>
 
-            {/* Size Buttons */}
+            {/* Variant (Size/Amount) Buttons */}
             <div className="mb-8">
-                <label className="block text-xs text-[#02303A]/40 font-bold uppercase mb-3">Choose Size</label>
+                <label className="block text-xs text-[#02303A]/40 font-bold uppercase mb-3">
+                   {isGiftCard ? "Choose Amount" : "Choose Size"}
+                </label>
                 <div className="flex gap-3 flex-wrap">
-                    {weightOptions.map((option: string) => (
+                    {variantOptions.map((option: string) => (
                         <button
                             key={option}
-                            onClick={() => handleWeightSelect(option)}
-                            className={`px-6 py-3 rounded-xl font-bold border-2 transition-all ${selectedWeight === option ? "border-[#02303A] bg-[#02303A] text-white" : "border-[#02303A]/10 bg-white text-[#02303A] hover:border-[#02303A]/30"}`}
+                            onClick={() => handleVariantSelect(option)}
+                            className={`px-6 py-3 rounded-xl font-bold border-2 transition-all ${selectedVariant === option ? "border-[#02303A] bg-[#02303A] text-white" : "border-[#02303A]/10 bg-white text-[#02303A] hover:border-[#02303A]/30"}`}
                         >
                             {option}
                         </button>
@@ -160,8 +171,17 @@ export default function ProductPage() {
             </div>
 
             <button onClick={handleAddToCart} className="w-full py-4 bg-[#02303A] text-[#F9F7F2] rounded-xl font-bold text-lg hover:bg-[#02303A]/90 transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:-translate-y-1">
-                <ShoppingBag /> Add to Cart
+                {isGiftCard ? <Gift /> : <ShoppingBag />}
+                {isGiftCard ? "Add Gift Card" : "Add to Cart"}
             </button>
+            
+            {!isGiftCard && (
+                <div className="mt-8 pt-8 border-t border-[#02303A]/10 grid grid-cols-2 gap-4 text-sm text-[#02303A]/60">
+                   <div className="flex items-center gap-2"><Truck size={18} /> Fast Delivery</div>
+                   <div className="flex items-center gap-2"><ShieldCheck size={18} /> Secure Checkout</div>
+                </div>
+            )}
+
           </motion.div>
         </div>
         
