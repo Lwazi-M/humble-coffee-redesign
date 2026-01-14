@@ -6,6 +6,20 @@ A high-performance, responsive e-commerce application built for **Humble Coffee*
 
 ---
 
+## 📖 About the Project & Brand
+
+### What is Humble Coffee?
+**Humble Coffee** is an artisanal coffee roastery based on **Florida Road in Durban, South Africa**. Established in **2019**, the brand focuses on ethically sourced beans, community connection, and the art of the roast. Their physical location is known for its warm, minimalist aesthetic and high-quality brews.
+
+### Why we built this?
+Standard e-commerce templates often fail to capture the "soul" of a specialty coffee brand. We built this custom application to:
+
+1.  **Translate the Atmosphere:** We wanted the website to feel like walking into the cafe—warm, inviting, and premium—using specific color palettes (Deep Teal & Gold) and smooth animations.
+2.  **Handle Coffee Complexity:** Selling coffee online is unique. A 1kg bag is not simply 4x the price of a 250g bag, and different blends have different price multipliers. Generic platforms struggle with this non-linear pricing logic.
+3.  **Performance First:** Mobile users in South Africa often have data constraints. We needed a site that loads instantly, swapping heavy videos for images on mobile devices while keeping the desktop experience immersive.
+
+---
+
 ## 🛠️ Tech Stack
 
 | Category | Technology | Usage |
