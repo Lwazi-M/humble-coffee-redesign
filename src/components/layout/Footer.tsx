@@ -95,8 +95,16 @@ const Footer = () => {
 
         </div>
 
-        <div className="border-t border-white/10 mt-12 pt-8 text-center opacity-60 text-sm">
-          © {new Date().getFullYear()} Humble Coffee. Designed by Lwazi.
+        {/* --- BOTTOM SECTION --- */}
+        <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+          <div className="opacity-60 text-sm">
+             <p>© {new Date().getFullYear()} Humble Coffee. Designed by Lwazi.</p>
+          </div>
+
+          {/* DISCLAIMER ADDED HERE */}
+          <div className="px-4 py-2 rounded-lg bg-[#E09F3E]/10 border border-[#E09F3E]/30 text-[#E09F3E] text-xs max-w-md">
+            <strong>Disclaimer:</strong> This is a software development portfolio project. This is not the official Humble Coffee website.
+          </div>
         </div>
 
       </div>
