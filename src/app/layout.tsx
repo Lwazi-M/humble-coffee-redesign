@@ -1,13 +1,18 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { CartProvider } from "@/context/CartContext"; // <--- 1. Import The Brain
-import CartDrawer from "@/components/layout/CartDrawer"; // <--- 2. Import The UI
+import { CartProvider } from "@/context/CartContext";
+import CartDrawer from "@/components/layout/CartDrawer";
 
 export const metadata: Metadata = {
   title: "Humble Coffee | Durban",
   description: "Ethically sourced, locally roasted.",
+  // vvv THIS ADDS THE LOGO TO THE BROWSER TAB vvv
+  icons: {
+    icon: '/assets/secondary_logo.webp', 
+  },
 };
 
 export default function RootLayout({
