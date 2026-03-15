@@ -1,0 +1,20 @@
+name: Supabase Keep Alive Ping
+
+# This triggers the action twice a week (Sunday and Wednesday at midnight UTC)
+# and also allows you to run it manually from the GitHub website.
+
+on:
+  schedule:
+    - cron: '0 0 * * 0,3'
+  workflow_dispatch:
+
+jobs:
+  ping-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase Database
+        run: |
+          curl --request GET \
+            --url "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/products?select=id&limit=1" \
+            --header "apikey: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
+            --header "Authorization: Bearer ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}"
